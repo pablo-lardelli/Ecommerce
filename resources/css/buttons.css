@@ -17,3 +17,7 @@
 .btn-gray {
     @apply bg-gray-500 text-white hover:bg-gray-700;
 }
+
+.btn-purple {
+    @apply bg-purple-500 text-white hover:bg-purple-700;
+}
