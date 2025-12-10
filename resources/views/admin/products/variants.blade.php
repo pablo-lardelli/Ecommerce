@@ -28,13 +28,13 @@
         <div class="relative mb-6">
 
             <figure>
-                <img class="aspect-[16/9] w-full object-cover object-center" src="{{ $variant->image }}" alt=""
+                <img class="aspect-[1/1] w-full object-cover object-center" src="{{ $variant->image }}" alt=""
                     id="imgPreview">
             </figure>
 
             <div class="absolute top-8 right-8">
 
-                <label class="flex items-center bg-gray-300 px-4 py-2 rounded-lg cursor-pointer">
+                <label class="flex items-center bg-white px-4 py-2 rounded-lg cursor-pointer">
                     <i class="fas fa-camera mr-2"></i>
                     Actualizar imagen
 

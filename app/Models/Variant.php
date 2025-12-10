@@ -21,7 +21,7 @@ class Variant extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->image_path ? Storage::url($this->image_path) : asset('img/no-image.png')
+            get: fn() => $this->image_path ? Storage::url($this->image_path) : asset('img/no-image-portada.jpg')
         );
     }
 

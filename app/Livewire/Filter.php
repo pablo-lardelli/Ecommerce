@@ -23,10 +23,9 @@ class Filter extends Component
     public function mount()
     {
         $this->options = Option::verifyFamily($this->family_id)
-        ->verifyCategory($this->category_id)
-        ->verifySubcategory($this->subcategory_id)
-        ->get()->toArray();
-
+            ->verifyCategory($this->category_id)
+            ->verifySubcategory($this->subcategory_id)
+            ->get()->toArray();
     }
 
     #[On('search')]
