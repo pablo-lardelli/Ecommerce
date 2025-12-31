@@ -16,7 +16,8 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.6.4"
+        "livewire/livewire": "^3.6.4",
+        "mercadopago/dx-php": "^3.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",

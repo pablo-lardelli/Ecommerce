@@ -19,7 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->validateCsrfTokens(except: [
+            '/checkout/paid',
+            '/webhooks/mercadopago',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

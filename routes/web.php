@@ -2,15 +2,19 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
+use MercadoPago\Client\Payment\PaymentClient;
+use MercadoPago\MercadoPagoConfig;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome.index');
 
@@ -20,7 +24,12 @@ Route::get('/subcategories/{subcategory}', [SubcategoryController::class, 'show'
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/shipping', [ShippingController::class, 'index'])->name('shipping.index');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('webhooks/mercadopago', [WebhookController::class, 'mercadopago'])->name('webhooks.mercadopago');
 
+Route::get('gracias', function () {
+    return view('gracias');
+})->name('gracias');
 
 
 Route::middleware([
@@ -34,7 +43,15 @@ Route::middleware([
 });
 
 Route::get('prueba', function(){
-    Cart::instance('shopping');
-    return Cart::content();
+    MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
+    
+    $client = new PaymentClient();
+    $payment = json_encode($client->get('138709911569'));
+
+    return json_decode($payment);
 });
 
+// Route::get('prueba', function () {
+//     Cart::instance('shopping');
+//     return Cart::content();
+// });
