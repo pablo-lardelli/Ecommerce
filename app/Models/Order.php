@@ -11,7 +11,7 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [
-        'status'
+        //'status'
     ];
 
     protected $casts = [
@@ -23,5 +23,10 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function shipments()
+    {
+        return $this->hasMany(Shipment::class);
     }
 }

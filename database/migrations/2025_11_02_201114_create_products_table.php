@@ -23,9 +23,9 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
-            $table->integer('stock')
-                ->unsigned()
-                ->default(0);
+            // $table->integer('stock')
+            //     ->unsigned()
+            //     ->default(0);
 
             $table->timestamps();
         });

@@ -72,8 +72,33 @@
                                     </div>
                                 @endforeach
 
-                                Agregar nuevo botón. Opción de agregar nuevo feature. Igual que en Opciones
+                            </div>
 
+                            {{-- Nuevos valores --}}
+                            <div class="flex space-x-4">
+                                <div class="flex-1">
+                                    <x-label>
+                                        Valor
+                                    </x-label>
+
+                                    <x-select wire:model="new_feature.{{$option->id}}" class="w-full">
+                                        <option value="">
+                                            Selecciona un valor
+                                        </option>
+
+                                        @foreach ($this->getFeatures($option->id) as $feature)
+                                            <option value="{{$feature->id}}">
+                                                {{$feature->description}}
+                                            </option>
+                                        @endforeach
+                                    </x-select>
+                                </div>
+
+                                <div class="pt-6">
+                                    <x-button wire:click="addNewFeature({{$option->id}})">
+                                        Agregar
+                                    </x-button>
+                                </div>
                             </div>
 
                         </div>
@@ -93,48 +118,48 @@
 
     </section>
 
-    @if ($product->variants->count())
+    <section class="rounded-lg border border-gray-200 bg-white shadow-lg mt-12">
 
-        <section class="rounded-lg border border-gray-200 bg-white shadow-lg mt-12">
-
-            <header class="border-b border-gray-200 px-6 py-2">
-                <div class="flex justify-between">
-                    <h1 class="text-lg font-semibold text-gray-700">
-                        Variantes
-                    </h1>
+        <header class="border-b border-gray-200 px-6 py-2">
+            <div class="flex justify-between">
+                <h1 class="text-lg font-semibold text-gray-700">
+                    Variantes
+                </h1>
 
 
-                </div>
-            </header>
-
-            <div class="p-6">
-                <ul class="divide-y -my-4">
-                    @foreach ($product->variants as $item)
-                        <li class="py-4 flex items-center">
-
-                            <img src="{{ $item->image }}" class="w-12 h-12 object-cover object-center">
-
-                            <p class="divide-x">
-                                @foreach ($item->features as $feature)
-                                    <span class="px-3">
-                                        {{ $feature->description }}
-                                    </span>
-                                @endforeach
-                            </p>
-
-                            <a href="{{ route('admin.products.variants', [$product, $item]) }}"
-                                class="ml-auto btn btn-blue">
-                                Editar
-                            </a>
-
-                        </li>
-                    @endforeach
-                </ul>
             </div>
+        </header>
 
-        </section>
+        <div class="p-6">
+            <ul class="divide-y -my-4">
+                @foreach ($product->variants as $item)
+                    <li class="py-4 flex items-center">
 
-    @endif
+                        <img src="{{ $item->image }}" class="w-12 h-12 object-cover object-center">
+
+                        <p class="divide-x">
+                            @forelse ($item->features as $feature)
+                                <span class="px-3">
+                                    {{ $feature->description }}
+                                </span>
+
+                            @empty
+                                <span class="px-3">
+                                    Variante principal
+                                </span>
+                            @endforelse
+                        </p>
+
+                        <button wire:click="editVariant({{ $item->id }})" class="ml-auto btn btn-blue">
+                            Editar
+                        </button>
+
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+    </section>
 
     <x-dialog-modal wire:model="openModal">
 
@@ -157,7 +182,7 @@
                         Seleccione una opción
                     </option>
 
-                    @foreach ($options as $option)
+                    @foreach ($this->options as $option)
                         <option value="{{ $option->id }}">
                             {{ $option->name }}
                         </option>
@@ -242,6 +267,43 @@
 
         </x-slot>
 
+    </x-dialog-modal>
+
+    {{-- modal editar variante --}}
+    <x-dialog-modal wire:model="variantEdit.open">
+        <x-slot name="title">
+            Editar variante
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="mb-4">
+                <x-label>
+                    SKU
+                </x-label>
+                <x-input class="w-full" wire:model="variantEdit.sku" />
+
+                <x-validation-errors for="variantEdit.sku" />
+            </div>
+
+            <div>
+                <x-label>
+                    Stock
+                </x-label>
+                <x-input class="w-full" wire:model="variantEdit.stock" />
+
+                <x-validation-errors for="variantEdit.stock" />
+            </div>
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-danger-button x-on:click="show = false">
+                Cancelar
+            </x-danger-button>
+
+            <x-button class="ml-2" wire:click="updateVariant">
+                Guardar
+            </x-button>
+        </x-slot>
     </x-dialog-modal>
 
     @push('js')

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->json('content');
             $table->json('address');
             $table->integer('payment_method')->default(1);
-            $table->string('payment_id');
+            $table->string('payment_id')->nullable();
             $table->float('total');
             $table->integer('status')->default(1);
 

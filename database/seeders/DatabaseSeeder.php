@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    //use WithoutModelEvents;
 
     /**
      * Seed the application's database.
@@ -37,6 +37,6 @@ class DatabaseSeeder extends Seeder
             OptionSeeder::class
         ]);
 
-        Product::factory(300)->create();
+        Product::factory(100)->create();
     }
 }

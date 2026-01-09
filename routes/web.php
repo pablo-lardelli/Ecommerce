@@ -9,8 +9,10 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 use MercadoPago\Client\Payment\PaymentClient;
@@ -23,8 +25,12 @@ Route::get('/categories/{category}', [CategoryController::class, 'show'])->name(
 Route::get('/subcategories/{subcategory}', [SubcategoryController::class, 'show'])->name('subcategories.show');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::get('/shipping', [ShippingController::class, 'index'])->name('shipping.index');
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('/shipping', [ShippingController::class, 'index'])
+    ->middleware('auth')
+    ->name('shipping.index');
+Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->middleware('auth')
+    ->name('checkout.index');
 Route::post('webhooks/mercadopago', [WebhookController::class, 'mercadopago'])->name('webhooks.mercadopago');
 
 Route::get('gracias', function () {
@@ -55,3 +61,17 @@ Route::get('prueba', function(){
 //     Cart::instance('shopping');
 //     return Cart::content();
 // });
+
+Route::get('prueba', function () {
+    $order = Order::first();
+
+    $pdf = Pdf::loadView('orders.ticket', compact('order'))->setPaper('a5');
+
+    $pdf->save(storage_path('app/public/tickets/ticket-' . $order->id . '.pdf'));
+    
+    $order->pdf_path = 'tickets/ticket-' . $order->id . '.pdf';
+    $order->save();
+
+    return "Ticket generado correctamente";
+    return view('orders.ticket', compact('order'));
+});
