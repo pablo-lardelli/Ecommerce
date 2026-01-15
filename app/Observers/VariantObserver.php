@@ -11,6 +11,9 @@ class VariantObserver
     {
         if($variant->product->options->count() == 0){
             $variant->sku = $variant->product->sku;
+            
+            $variant->stock = 10;
+
             $variant->save();
 
             return;

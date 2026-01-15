@@ -9,6 +9,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Middleware\VerifyStock;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
@@ -24,7 +25,9 @@ Route::get('/families/{family}', [FamilyController::class, 'show'])->name('famil
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/subcategories/{subcategory}', [SubcategoryController::class, 'show'])->name('subcategories.show');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+/* Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); */
+Route::middleware(VerifyStock::class)
+    ->get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/shipping', [ShippingController::class, 'index'])
     ->middleware('auth')
     ->name('shipping.index');
@@ -48,9 +51,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('prueba', function(){
+Route::get('prueba', function () {
     MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
-    
+
     $client = new PaymentClient();
     $payment = json_encode($client->get('138709911569'));
 
@@ -68,7 +71,7 @@ Route::get('prueba', function () {
     $pdf = Pdf::loadView('orders.ticket', compact('order'))->setPaper('a5');
 
     $pdf->save(storage_path('app/public/tickets/ticket-' . $order->id . '.pdf'));
-    
+
     $order->pdf_path = 'tickets/ticket-' . $order->id . '.pdf';
     $order->save();
 

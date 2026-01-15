@@ -76,21 +76,27 @@
                 Datos del cliente
             </h3>
 
-            <div>
-                Nombre: {{ $order->address['receiver_info']['name'] . ' ' . $order->address['receiver_info']['last_name']}}
-            </div>
+            @if ($order->address !== null)
+                <div>
+                    Retiro con orden
+                </div>
+            @else
+                <div>
+                    Nombre: {{ $order->address['receiver_info']['name'] . ' ' . $order->address['receiver_info']['last_name']}}
+                </div>
 
-            <div>
-                Documento: {{ $order->address['receiver_info']['document_number'] }}
-            </div>
+                <div>
+                    Documento: {{ $order->address['receiver_info']['document_number'] }}
+                </div>
 
-            <div>
-                Dirección: {{ $order->address['description'] }} - {{ $order->address['district'] }} ({{ $order->address['reference'] }})
-            </div>
+                <div>
+                    Dirección: {{ $order->address['description'] }} - {{ $order->address['district'] }} ({{ $order->address['reference'] }})
+                </div>
 
-            <div>
-                Teléfono: {{ $order->address['receiver_info']['phone'] }}
-            </div>
+                <div>
+                    Teléfono: {{ $order->address['receiver_info']['phone'] }}
+                </div>
+            @endif
         </div>
 
         <div class="footer">

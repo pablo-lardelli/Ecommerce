@@ -32,32 +32,6 @@
                                     </p>
                                 </div>
                             </li>
-
-                            <li>
-                                <label class="p-4 flex items-center">
-                                    <input type="radio" x-model="pago" value="2">
-
-                                    <span class="ml-2">
-                                        Depósito bancario
-                                    </span>
-                                </label>
-
-                                <div class="p-4 bg-gray-100 flex justify-center border-t border-gray-400" x-cloak
-                                    x-show="pago == 2">
-                                    <div>
-                                        <p>1. Pago por depósito o tranferencia bancaria:</p>
-                                        <p>- Santander: 198-987456321-45</p>
-                                        <p>- CCI: 002 - 198-987456321</p>
-                                        <p>- Razón social: Eccomerce S.A</p>
-                                        <p>- CUIT: 20-25456987-7</p>
-                                        <p>2. Mercado Pago</p>
-                                        <p>- 54654654234387 (Eccomerce S.A)</p>
-                                        <p>
-                                            Enviar el comprobante de pago a 466066
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -66,7 +40,7 @@
             <div class="col-span-1">
                 <div class="lg:max-w-[40rem] py-12 px-4 lg:pl-8 sm:pr-6 lg:pr-8 mr-auto">
                     <ul class="space-y-4 mb-4">
-                        @foreach (Cart::instance('shopping')->content() as $item)
+                        @foreach ( $content as $item)
                             <li class="flex items-center space-x-4">
                                 <div class="flex-shrink-0 relative">
                                     <img class="h-16 aspect-square" src="{{ $item->options->image }}" alt="">
@@ -100,7 +74,7 @@
                         </p>
 
                         <p>
-                            $ {{ Cart::instance('shopping')->subtotal() }}
+                            $ {{ $subtotal }}
                         </p>
                     </div>
 
@@ -112,7 +86,7 @@
                         </p>
 
                         <p>
-                            $ 1000
+                            $ {{$delivery}}
                         </p>
                     </div>
 
@@ -124,7 +98,7 @@
                         </p>
 
                         <p>
-                            $ {{ Cart::instance('shopping')->subtotal() + 1000 }}
+                            $ {{ $total }}
                         </p>
                     </div>
 

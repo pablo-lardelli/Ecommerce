@@ -6,30 +6,53 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Order;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Http\Request;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
+use Illuminate\Support\Facades\Log;
+use MercadoPago\Client\Payment\PaymentClient;
 
 class CheckoutController extends Controller
 {
     public function index()
     {
+        Cart::instance('shopping');
+
+        $content = Cart::content()->filter(function ($item) {
+            return $item->qty <= $item->options->stock;
+        });
+
+        $subtotal = $content->sum(function ($item) {
+            return $item->subtotal;
+        });
+
+        $delivery = number_format(100, 2);
+
+        $total = $subtotal + $delivery;
+
         $address = Address::where('user_id', auth()->id())
             ->where('default', true)
             ->first();
 
+        if(!$address){
+            $address = "Retiro con orden en mano";
+        }
+
         $order = Order::create([
             'user_id' => auth()->id(),
-            'content' => Cart::instance('shopping')->content(),
+            'content' => $content,
             'address' => $address,
             'payment_method' => 1, // Mercado Pago
             'payment_id' => '',
-            'total' => (float) Cart::instance('shopping')->subtotal(),
+            'total' => $total,
             'status' => 1, // pendiente
         ]);
 
         $preferenceId = $this->generatePreferenceId($order);
 
-        return view('checkout.index', compact('preferenceId'));
+        Cart::destroy();
+
+        return view('checkout.index', compact('preferenceId', 'content', 'subtotal', 'delivery', 'total'));
     }
 
     public function generatePreferenceId(Order $order)
@@ -47,7 +70,7 @@ class CheckoutController extends Controller
                     "unit_price" => (float) $order->total, //(float) Cart::instance('shopping')->subtotal()
                 ],
             ],
-            "external_reference" => $order->id, //(int)rand(1000000, 9999999),
+            "external_reference" => $order->id,
             //"notification_url" => route('webhooks.mercadopago'),
             "notification_url" => "https://morgan-surly-inquietly.ngrok-free.dev/webhooks/mercadopago"
         ]);
@@ -61,4 +84,5 @@ class CheckoutController extends Controller
 
         return $preference->id;
     }
+
 }

@@ -15,12 +15,18 @@
             <div class="card">
                 <ul class="space-y-4">
                     @forelse (Cart::content() as $item)
-                        <li class="lg:flex">
+                        <li class="lg:flex {{$item->qty > $item->options['stock'] ? 'text-red-600' : ''}} ">
                             <img class="w-full lg:w-36 aspect-[16/9] object-cover object-center mr-2"
                                 src="{{ $item->options->image }}" alt="">
 
                             <div class="w-80">
-                                <p class="text-sm">
+                                @if ($item->qty > $item->options['stock'])
+                                    <p class="font-semibold">
+                                        Stock insuficiente
+                                    </p>
+                                @endif
+
+                                <p class="text-sm truncate">
                                     <a href="{{ route('products.show', $item->id) }}">
                                         {{ $item->name }}
                                     </a>
@@ -49,7 +55,10 @@
                                 </span>
 
                                 <button class="btn btn-gray"
-                                    wire:click="increase('{{$item->rowId}}')">
+                                    wire:click="increase('{{$item->rowId}}')"
+                                    wire:loading.attr="disabled"
+                                    wire:target="increase('{{$item->rowId}}')"
+                                    @disabled($item->qty >= $item->options['stock'])>
                                     +
                                 </button>
                             </div>
@@ -71,7 +80,7 @@
                     </p>
 
                     <p>
-                        $ {{Cart::subtotal()}}
+                        $ {{$this->subtotal}}
                     </p>
                 </div>
 

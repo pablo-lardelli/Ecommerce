@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Address;
 
 class ShippingController extends Controller
 {
     public function index()
     {
-        return view('shipping.index');
+        $address = Address::where('user_id', auth()->id())
+            ->where('default', true)
+            ->first();
+
+        return view('shipping.index', compact('address'));
     }
 }
