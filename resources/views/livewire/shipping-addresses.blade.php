@@ -290,8 +290,16 @@
                             @endforeach
                         </ul>
                     @else
-                        <p class="text-center">
+                        <p class="text-center mb-4">
                             No se ha encontrado direcciones
+                        </p>
+
+                        <p class="font-semibold">
+                            Retiro en local: Corro 897 - Planta baja A
+                        </p>
+
+                        <p class="font-semibold">
+                            Retira: {{auth()->user()->name . ' ' . auth()->user()->last_name}}
                         </p>
                     @endif
 

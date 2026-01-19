@@ -13,14 +13,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (){
     return view('admin.dashboard');
-})->name('dashboard');
+})->middleware('can:access dashboard')
+    ->name('dashboard');
 
-Route::get('/options', [OptionController::class, 'index'])->name('options.index');
+Route::get('/options', [OptionController::class, 'index'])
+    ->middleware('can:manage options')
+    ->name('options.index');
 
-Route::resource('families', FamilyController::class);
-Route::resource('categories', CategoryController::class);
-Route::resource('subcategories', SubcategoryController::class);
-Route::resource('products', ProductController::class);
+Route::resource('families', FamilyController::class)->middleware('can:manage families');
+Route::resource('categories', CategoryController::class)->middleware('can:manage categories');
+Route::resource('subcategories', SubcategoryController::class)->middleware('can:manage subcategories');
+Route::resource('products', ProductController::class)->middleware('can:manage products');
 Route::get('products/{product}/variants/{variant}', [ProductController::class, 'variants'])
     ->name('products.variants')
     ->scopeBindings();
@@ -28,8 +31,12 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
     ->name('products.variantsUpdate')
     ->scopeBindings();
 
-Route::resource('covers', CoverController::class);
+Route::resource('covers', CoverController::class)->middleware('can:manage covers');
 
-Route::resource('drivers', DriverController::class);
-Route::get('shipments', [ShipmentController::class, 'index'])->name('shipments.index');
-Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+Route::resource('drivers', DriverController::class)->middleware('can:manage drivers');
+Route::get('shipments', [ShipmentController::class, 'index'])
+    ->name('shipments.index')
+    ->middleware('can:manage shipments');
+Route::get('orders', [OrderController::class, 'index'])
+    ->name('orders.index')
+    ->middleware('can:manage orders');

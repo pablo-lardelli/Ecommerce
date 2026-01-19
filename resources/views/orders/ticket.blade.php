@@ -78,7 +78,7 @@
 
             @if ($order->address !== null)
                 <div>
-                    Retiro con orden
+                    Retiro por sucursal: {{$order->user->name . ' ' . $order->user->last_name}}
                 </div>
             @else
                 <div>

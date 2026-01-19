@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Forms\Shipping\CreateAddressForm;
 use App\Livewire\Forms\Shipping\EditAddressForm;
 use App\Models\Address;
+use App\Models\User;
 use Livewire\Component;
 
 class ShippingAddresses extends Component
